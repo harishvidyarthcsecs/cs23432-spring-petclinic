@@ -3,59 +3,42 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
 
 <body>
-
-  <h2 th:text="#{owners}">Owners</h2>
-
-  <table id="owners" class="table table-striped">
-    <thead>
-      <tr>
-        <th th:text="#{name}" style="width: 150px;">Name</th>
-        <th th:text="#{address}" style="width: 200px;">Address</th>
-        <th th:text="#{city}">City</th>
-        <th th:text="#{telephone}" style="width: 120px">Telephone</th>
-        <th th:text="#{pets}">Pets</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="owner : ${listOwners}">
-        <td>
-          <a th:href="@{/owners/__${owner.id}__}" th:text="${owner.firstName + ' ' + owner.lastName}" /></a>
-        </td>
-        <td th:text="${owner.address}" />
-        <td th:text="${owner.city}" />
-        <td th:text="${owner.telephone}" />
-        <td><span th:text="${#strings.listJoin(owner.pets, ', ')}" /></td>
-      </tr>
-    </tbody>
-  </table>
-  <div th:if="${totalPages > 1}">
-    <span th:text="#{pages}">Pages:</span>
-    <span>[</span>
-    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-      <a th:if="${currentPage != i}" th:href="@{'/owners?page=' + ${i}}">[[${i}]]</a>
-      <span th:unless="${currentPage != i}">[[${i}]]</span>
-    </span>
-    <span>]&nbsp;</span>
-    <span>
-      <a th:if="${currentPage > 1}" th:href="@{'/owners?page=1'}" th:title="#{first}" class="fa fa-fast-backward"></a>
-      <span th:unless="${currentPage > 1}" th:title="#{first}" class="fa fa-fast-backward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage > 1}" th:href="@{'/owners?page=__${currentPage - 1}__'}" th:title="#{previous}"
-        class="fa fa-step-backward"></a>
-      <span th:unless="${currentPage > 1}" th:title="#{previous}" class="fa fa-step-backward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage < totalPages}" th:href="@{'/owners?page=__${currentPage + 1}__'}" th:title="#{next}"
-        class="fa fa-step-forward"></a>
-      <span th:unless="${currentPage < totalPages}" th:title="#{next}" class="fa fa-step-forward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage < totalPages}" th:href="@{'/owners?page=__${totalPages}__'}" th:title="#{last}"
-        class="fa fa-fast-forward"></a>
-      <span th:unless="${currentPage < totalPages}" th:title="#{last}" class="fa fa-fast-forward"></span>
-    </span>
+  <div class="page-heading page-heading-split">
+    <div><span class="eyebrow" th:text="#{ownerDirectory}">Owner directory</span><h1 th:text="#{owners}">Owners</h1><p><span th:text="${totalItems}">0</span> <span th:text="#{recordsFound}">records found</span></p></div>
+    <a class="btn btn-primary" th:href="@{/owners/new}"><i class="fa fa-plus" aria-hidden="true"></i><span th:text="#{addOwner}">Add Owner</span></a>
   </div>
+
+  <section class="directory-panel" aria-labelledby="owner-list-title">
+    <div class="directory-toolbar">
+      <h2 id="owner-list-title" class="visually-hidden" th:text="#{ownerResults}">Owner results</h2>
+      <div class="filter-field"><i class="fa fa-search" aria-hidden="true"></i><label class="visually-hidden" for="owner-filter" th:text="#{filterOwners}">Filter owners</label><input id="owner-filter" class="form-control" type="search" th:placeholder="#{filterOwnersPlaceholder}" data-list-filter="#owners-body" data-empty-target="#owner-filter-empty"></div>
+      <a class="btn btn-secondary btn-sm" th:href="@{/owners/find}"><i class="fa fa-sliders" aria-hidden="true"></i><span th:text="#{newSearch}">New search</span></a>
+    </div>
+    <div class="table-responsive">
+      <table id="owners" class="data-table">
+        <thead><tr><th th:text="#{name}">Name</th><th th:text="#{city}">City</th><th th:text="#{telephone}">Telephone</th><th th:text="#{pets}">Pets</th><th><span class="visually-hidden" th:text="#{actions}">Actions</span></th></tr></thead>
+        <tbody id="owners-body">
+          <tr th:each="owner : ${listOwners}" th:data-filter-text="${owner.firstName + ' ' + owner.lastName + ' ' + owner.city + ' ' + owner.telephone + ' ' + #strings.listJoin(owner.pets, ' ')}">
+            <td><a class="person-cell" th:href="@{/owners/__${owner.id}__}"><span class="avatar" th:text="${(#strings.isEmpty(owner.firstName) ? '?' : #strings.substring(owner.firstName,0,1)) + (#strings.isEmpty(owner.lastName) ? '?' : #strings.substring(owner.lastName,0,1))}">JD</span><span><strong th:text="${owner.firstName + ' ' + owner.lastName}">Name</strong><small th:text="${owner.address}">Address</small></span></a></td>
+            <td><span class="meta-cell"><i class="fa fa-map-marker" aria-hidden="true"></i><span th:text="${owner.city}">City</span></span></td>
+            <td><a class="text-link" th:href="${'tel:' + owner.telephone}" th:text="${owner.telephone}">Telephone</a></td>
+            <td><span class="count-badge"><i class="fa fa-paw" aria-hidden="true"></i><span th:text="${#lists.size(owner.pets)}">0</span></span></td>
+            <td><a class="icon-link" th:href="@{/owners/__${owner.id}__}" th:aria-label="#{viewOwner}"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="owner-filter-empty" class="inline-empty" hidden><i class="fa fa-search" aria-hidden="true"></i><span th:text="#{noMatchingOwners}">No owners match this filter.</span></div>
+  </section>
+
+  <nav class="pagination-wrap" th:if="${totalPages > 1}" th:aria-label="#{ownerPagination}">
+    <span class="pagination-summary"><span th:text="#{page}">Page</span> <strong th:text="${currentPage}">1</strong> <span th:text="#{of}">of</span> <strong th:text="${totalPages}">1</strong></span>
+    <ul class="pagination">
+      <li th:classappend="${currentPage <= 1} ? 'disabled'"><a th:if="${currentPage > 1}" th:href="@{'/owners?page=' + ${currentPage - 1}}" th:aria-label="#{previous}"><i class="fa fa-chevron-left" aria-hidden="true"></i></a><span th:unless="${currentPage > 1}"><i class="fa fa-chevron-left" aria-hidden="true"></i></span></li>
+      <li th:each="i: ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'"><a th:if="${currentPage != i}" th:href="@{'/owners?page=' + ${i}}" th:text="${i}">1</a><span th:unless="${currentPage != i}" th:text="${i}">1</span></li>
+      <li th:classappend="${currentPage >= totalPages} ? 'disabled'"><a th:if="${currentPage < totalPages}" th:href="@{'/owners?page=' + ${currentPage + 1}}" th:aria-label="#{next}"><i class="fa fa-chevron-right" aria-hidden="true"></i></a><span th:unless="${currentPage < totalPages}"><i class="fa fa-chevron-right" aria-hidden="true"></i></span></li>
+    </ul>
+  </nav>
 </body>
 
 </html>

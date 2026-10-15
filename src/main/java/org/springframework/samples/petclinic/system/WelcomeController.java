@@ -16,14 +16,30 @@
 
 package org.springframework.samples.petclinic.system;
 
+import org.springframework.samples.petclinic.owner.OwnerRepository;
+import org.springframework.samples.petclinic.vet.VetRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 class WelcomeController {
 
+	private final OwnerRepository ownerRepository;
+
+	private final VetRepository vetRepository;
+
+	WelcomeController(OwnerRepository ownerRepository, VetRepository vetRepository) {
+		this.ownerRepository = ownerRepository;
+		this.vetRepository = vetRepository;
+	}
+
 	@GetMapping("/")
-	public String welcome() {
+	public String welcome(Model model) {
+		model.addAttribute("ownerCount", this.ownerRepository.count());
+		model.addAttribute("petCount", this.ownerRepository.countPets());
+		model.addAttribute("vetCount", this.vetRepository.count());
+		model.addAttribute("visitCount", this.ownerRepository.countVisits());
 		return "welcome";
 	}
 

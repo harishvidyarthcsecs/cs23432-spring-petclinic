@@ -3,57 +3,12 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
 
 <body>
-
-  <h2>
-    <th:block th:if="${visit['new']}" th:text="#{new}">New </th:block>
-    Visit
-  </h2>
-
-  <b th:text="#{pet}">Pet</b>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th th:text="#{name}">Name</th>
-        <th th:text="#{birthDate}">Birth Date</th>
-        <th th:text="#{type}">Type</th>
-        <th th:text="#{owner}">Owner</th>
-      </tr>
-    </thead>
-    <tr>
-      <td th:text="${pet.name}"></td>
-      <td th:text="${#temporals.format(pet.birthDate, 'yyyy-MM-dd')}"></td>
-      <td th:text="${pet.type}"></td>
-      <td th:text="${owner?.firstName + ' ' + owner?.lastName}"></td>
-    </tr>
-  </table>
-
-  <form th:object="${visit}" class="form-horizontal" method="post">
-    <div class="form-group has-feedback">
-      <input th:replace="~{fragments/inputField :: input ('Date', 'date', 'date')}" />
-      <input th:replace="~{fragments/inputField :: input ('Description', 'description', 'text')}" />
-    </div>
-
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <input type="hidden" name="petId" th:value="${pet.id}" />
-        <button class="btn btn-primary" type="submit" th:text="#{addVisit}">Add Visit</button>
-      </div>
-    </div>
-  </form>
-
-  <br />
-  <b th:text="#{previousVisits}">Previous Visits</b>
-  <table class="table table-striped">
-    <tr>
-      <th th:text="#{date}">Date</th>
-      <th th:text="#{description}">Description</th>
-    </tr>
-    <tr th:if="${!visit['new']}" th:each="visit : ${pet.visits}">
-      <td th:text="${#temporals.format(visit.date, 'yyyy-MM-dd')}"></td>
-      <td th:text=" ${visit.description}"></td>
-    </tr>
-  </table>
-
+  <nav class="breadcrumbs" th:aria-label="#{breadcrumbs}"><a th:href="@{/owners/__${owner.id}__}" th:text="${owner.firstName + ' ' + owner.lastName}">Owner</a><i class="fa fa-chevron-right" aria-hidden="true"></i><span th:text="#{addVisit}">Add Visit</span></nav>
+  <div class="visit-form-layout">
+    <section><div class="page-heading"><span class="eyebrow" th:text="#{careRecord}">Care record</span><h1 th:text="#{recordVisit}">Record a new visit</h1><p th:text="#{visitFormHint}">Add the date and a clear clinical summary for the next care handoff.</p></div><div class="subject-card"><span class="pet-avatar"><i class="fa fa-paw" aria-hidden="true"></i></span><div class="subject-primary"><span class="type-badge" th:text="${pet.type}">Type</span><h2 th:text="${pet.name}">Pet</h2><span><span th:text="#{owner}">Owner</span>: <strong th:text="${owner.firstName + ' ' + owner.lastName}">Owner</strong></span></div><div class="subject-facts"><span><small th:text="#{birthDate}">Birth Date</small><strong th:text="${#temporals.format(pet.birthDate, 'MMM d, yyyy')}">Date</strong></span></div></div>
+      <section class="form-card compact-form" th:aria-label="#{visitInformation}"><form th:object="${visit}" method="post" novalidate><div class="form-grid"><input th:replace="~{fragments/inputField :: input (#{date}, 'date', 'date')}" /><input th:replace="~{fragments/inputField :: input (#{description}, 'description', 'text')}" /></div><input type="hidden" name="petId" th:value="${pet.id}" /><div class="form-actions"><a class="btn btn-quiet" th:href="@{/owners/__${owner.id}__}" th:text="#{cancel}">Cancel</a><button class="btn btn-primary" type="submit"><i class="fa fa-plus" aria-hidden="true"></i><span th:text="#{addVisit}">Add Visit</span></button></div></form></section></section>
+    <aside class="history-panel"><div class="history-heading"><span class="history-icon"><i class="fa fa-history" aria-hidden="true"></i></span><div><span class="eyebrow" th:text="#{history}">History</span><h2 th:text="#{previousVisits}">Previous Visits</h2></div></div><ol class="timeline timeline-roomy" th:if="${!#lists.isEmpty(pet.visits)}"><li th:each="previousVisit : ${pet.visits}"><span class="timeline-dot" aria-hidden="true"></span><time th:text="${#temporals.format(previousVisit.date, 'MMM d, yyyy')}">Date</time><p th:text="${previousVisit.description}">Description</p></li></ol><div class="mini-empty" th:if="${#lists.isEmpty(pet.visits)}"><i class="fa fa-calendar-o" aria-hidden="true"></i><span th:text="#{noVisitsYet}">No visits recorded yet.</span></div></aside>
+  </div>
 </body>
 
 </html>

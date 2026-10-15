@@ -3,55 +3,13 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'vets')}">
 
 <body>
-
-  <h2 th:text="#{vets}">Veterinarians</h2>
-
-  <table id="vets" class="table table-striped">
-    <thead>
-      <tr>
-        <th th:text="#{name}">Name</th>
-        <th th:text="#{specialties}">Specialties</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="vet : ${listVets}">
-        <td th:text="${vet.firstName + ' ' + vet.lastName}"></td>
-        <td>
-          <span th:each="specialty : ${vet.specialties}" th:text="${specialty.name + ' '}" /> <span
-            th:if="${vet.nrOfSpecialties == 0}" th:text="#{none}">none</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div th:if="${totalPages > 1}">
-    <span th:text="#{pages}">Pages:</span>
-    <span>[</span>
-    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-      <a th:if="${currentPage != i}" th:href="@{'/vets.html?page=__${i}__'}">[[${i}]]</a>
-      <span th:unless="${currentPage != i}">[[${i}]]</span>
-    </span>
-    <span>]&nbsp;</span>
-    <span>
-      <a th:if="${currentPage > 1}" th:href="@{'/vets.html?page=1'}" th:title="#{first}"
-        class="fa fa-fast-backward"></a>
-      <span th:unless="${currentPage > 1}" th:title="#{first}" class="fa fa-fast-backward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage > 1}" th:href="@{'/vets.html?page=__${currentPage - 1}__'}" th:title="#{previous}"
-        class="fa fa-step-backward"></a>
-      <span th:unless="${currentPage > 1}" th:title="#{previous}" class="fa fa-step-backward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage < totalPages}" th:href="@{'/vets.html?page=__${currentPage + 1}__'}" th:title="#{next}"
-        class="fa fa-step-forward"></a>
-      <span th:unless="${currentPage < totalPages}" th:title="#{next}" class="fa fa-step-forward"></span>
-    </span>
-    <span>
-      <a th:if="${currentPage < totalPages}" th:href="@{'/vets.html?page=__${totalPages}__'}" th:title="#{last}"
-        class="fa fa-fast-forward"></a>
-      <span th:unless="${currentPage < totalPages}" th:title="#{last}" class="fa fa-fast-forward"></span>
-    </span>
-  </div>
+  <div class="page-heading page-heading-split"><div><span class="eyebrow" th:text="#{careTeam}">Care team</span><h1 th:text="#{vets}">Veterinarians</h1><p th:text="#{vetsDescription}">Meet the clinicians bringing skill and compassion to every appointment.</p></div><span class="section-count"><span th:text="${totalItems}">0</span> <span th:text="#{teamMembers}">team members</span></span></div>
+  <div class="directory-toolbar standalone-toolbar"><div class="filter-field"><i class="fa fa-search" aria-hidden="true"></i><label class="visually-hidden" for="vet-filter" th:text="#{filterVets}">Filter veterinarians</label><input id="vet-filter" class="form-control" type="search" th:placeholder="#{filterVetsPlaceholder}" data-list-filter="#vet-grid" data-empty-target="#vet-filter-empty"></div></div>
+  <section id="vet-grid" class="vet-grid" th:aria-label="#{veterinaryTeam}">
+    <article class="vet-card" th:each="vet : ${listVets}" th:data-filter-text="${vet.firstName + ' ' + vet.lastName + ' ' + #strings.listJoin(vet.specialties, ' ')}"><div class="vet-card-top"><span class="avatar avatar-lg" th:text="${#strings.substring(vet.firstName,0,1) + #strings.substring(vet.lastName,0,1)}">JD</span><span class="available-badge"><span class="status-dot" aria-hidden="true"></span><span th:text="#{onTeam}">On team</span></span></div><div class="vet-card-body"><h2 th:text="${vet.firstName + ' ' + vet.lastName}">Vet name</h2><span class="vet-role" th:text="#{veterinarian}">Veterinarian</span><div class="chip-list" th:if="${vet.nrOfSpecialties > 0}"><span class="specialty-chip" th:each="specialty : ${vet.specialties}" th:text="${specialty.name}">Specialty</span></div><div class="chip-list" th:if="${vet.nrOfSpecialties == 0}"><span class="specialty-chip specialty-chip-muted" th:text="#{generalPractice}">General practice</span></div></div><div class="vet-card-footer"><i class="fa fa-stethoscope" aria-hidden="true"></i><span th:text="#{careTeamMember}">PetClinic care team</span></div></article>
+  </section>
+  <div id="vet-filter-empty" class="empty-state inline-filter-empty" hidden><span class="empty-icon"><i class="fa fa-search" aria-hidden="true"></i></span><h2 th:text="#{noMatchingVets}">No veterinarians found</h2><p th:text="#{tryAnotherSearch}">Try another name or specialty.</p></div>
+  <nav class="pagination-wrap" th:if="${totalPages > 1}" th:aria-label="#{vetPagination}"><span class="pagination-summary"><span th:text="#{page}">Page</span> <strong th:text="${currentPage}">1</strong> <span th:text="#{of}">of</span> <strong th:text="${totalPages}">1</strong></span><ul class="pagination"><li th:classappend="${currentPage <= 1} ? 'disabled'"><a th:if="${currentPage > 1}" th:href="@{'/vets.html?page=' + ${currentPage - 1}}" th:aria-label="#{previous}"><i class="fa fa-chevron-left" aria-hidden="true"></i></a><span th:unless="${currentPage > 1}"><i class="fa fa-chevron-left" aria-hidden="true"></i></span></li><li th:each="i: ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'"><a th:if="${currentPage != i}" th:href="@{'/vets.html?page=' + ${i}}" th:text="${i}">1</a><span th:unless="${currentPage != i}" th:text="${i}">1</span></li><li th:classappend="${currentPage >= totalPages} ? 'disabled'"><a th:if="${currentPage < totalPages}" th:href="@{'/vets.html?page=' + ${currentPage + 1}}" th:aria-label="#{next}"><i class="fa fa-chevron-right" aria-hidden="true"></i></a><span th:unless="${currentPage < totalPages}"><i class="fa fa-chevron-right" aria-hidden="true"></i></span></li></ul></nav>
 </body>
 
 </html>

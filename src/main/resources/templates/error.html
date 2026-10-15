@@ -3,19 +3,7 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'error')}">
 
 <body>
-  <img src="../static/resources/images/pets.png" th:src="@{/resources/images/pets.png}" />
-  <!-- Title: Something happened -->
-  <h2 th:text="#{somethingHappened}">Something happened...</h2>
-
-  <!-- Status-specific error message -->
-  <p th:switch="${status}">
-    <span th:case="404" th:text="#{error.404}">The requested page was not found.</span>
-    <span th:case="500" th:text="#{error.500}">An internal server error occurred.</span>
-    <span th:case="*" th:text="#{error.general}">An unexpected error occurred.</span>
-  </p>
-
-  <!-- Exception message (for developers) -->
-  <p th:text="${message}">Exception message</p>
+  <section class="error-state"><div class="error-visual" aria-hidden="true"><span class="error-orbit"></span><i class="fa fa-paw"></i><strong th:text="${status ?: '500'}">500</strong></div><span class="eyebrow" th:text="#{careInterrupted}">Care interrupted</span><h1 th:text="#{somethingHappened}">Something happened...</h1><p class="error-description" th:switch="${status}"><span th:case="404" th:text="#{error.404}">The requested page was not found.</span><span th:case="500" th:text="#{error.500}">An internal server error occurred.</span><span th:case="*" th:text="#{error.general}">An unexpected error occurred.</span></p><details th:if="${message}" class="error-details"><summary th:text="#{technicalDetails}">Technical details</summary><p th:text="${message}">Exception message</p></details><div class="error-actions"><a class="btn btn-primary" th:href="@{/}"><i class="fa fa-home" aria-hidden="true"></i><span th:text="#{backHome}">Back home</span></a><a class="btn btn-secondary" th:href="@{/owners/find}" th:text="#{findOwners}">Find owners</a></div></section>
 </body>
 
 </html>
