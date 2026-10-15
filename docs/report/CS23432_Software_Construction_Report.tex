@@ -50,7 +50,7 @@
 \renewcommand{\@makechapterhead}[1]{{\parindent\z@\raggedright\normalfont
   \Large\bfseries\color{navy}\MakeUppercase{Chapter~\thechapter\quad #1}\par
   \vspace{2pt}{\color{navysoft}\rule{\linewidth}{1.2pt}}\par\vspace{8pt}}}
-\renewcommand\chapter[1]{\par\needspace{8\baselineskip}\addvspace{10pt}\refstepcounter{chapter}\setcounter{section}{0}\@makechapterhead{#1}}
+\renewcommand\chapter[1]{\par\needspace{6\baselineskip}\addvspace{10pt}\refstepcounter{chapter}\setcounter{section}{0}\@makechapterhead{#1}}
 \makeatother
 
 \pagestyle{fancy}
@@ -98,8 +98,8 @@
 {\Usefont{ppl}\Large\bfseries CS23432 / SOFTWARE CONSTRUCTION}\\[2pt]
 (LAB ORIENTED THEORY COURSE)\\[10pt]
 \normalsize Project Report on\\[6pt]
-{\Usefont{ppl}\large\bfseries Design, Testing and CI/CD Analysis of the\\
-Spring PetClinic Reference Application}\\[24pt]
+{\Usefont{ppl}\large\bfseries Veterinary Clinic Management System\\
+(Spring PetClinic)}\\[24pt]
 \normalsize Submitted by\\[6pt]
 {\Usefont{ppl}\large\bfseries N. HARISH VIDYARTH}\\
 Register No.: 2116241901035\\[4pt]
@@ -123,8 +123,8 @@ III Year -- B.E. CSE (Cyber Security)\\[22pt]
 {\Usefont{ppl}\Large\bfseries BONAFIDE CERTIFICATE}
 \end{center}
 \vspace{1.2cm}
-\noindent Certified that this project report \textbf{``DESIGN, TESTING AND CI/CD ANALYSIS OF THE
-SPRING PETCLINIC REFERENCE APPLICATION''} is the bonafide work of \textbf{``N.\ HARISH VIDYARTH''}
+\noindent Certified that this project report \textbf{``VETERINARY CLINIC MANAGEMENT SYSTEM
+(SPRING PETCLINIC)''} is the bonafide work of \textbf{``N.\ HARISH VIDYARTH''}
 (Register No.\ 2116241901035), who carried out the project work for the course
 \textbf{CS23432 -- Software Construction} under my supervision.
 \vspace{3.2cm}
@@ -340,17 +340,8 @@ page now shows each pet's age in whole years.
 \end{itemize}
 
 \begin{figure}[H]\centering
-\includegraphics[width=0.6\linewidth]{assets/owner6_age.png}
+\includegraphics[width=0.34\linewidth]{assets/owner6_age.png}
 \caption{Owner page after the enhancement: Max, born 2012-09-04, shows ``Age 14 years''.}
-\end{figure}
-
-\section{Running Application}
-The application was also started (\code{mvn spring-boot:run}, in-memory H2 database) and its
-pages were captured from a browser.
-
-\begin{figure}[H]\centering
-\includegraphics[width=0.5\linewidth]{assets/home.png}
-\caption{PetClinic home page, running locally on an in-memory H2 database.}
 \end{figure}
 
 \chapter{Repository and Configuration Management}
@@ -405,7 +396,7 @@ classes of Chapter~3.
 \end{table}
 
 \begin{figure}[H]\centering
-\includegraphics[width=0.58\linewidth]{assets/vets.png}
+\includegraphics[width=0.32\linewidth]{assets/vets.png}
 \caption{Veterinarians page served from the \code{vets} and \code{specialties} tables.}
 \end{figure}
 
@@ -428,11 +419,33 @@ steps:
 \end{lstlisting}
 
 
+\needspace{12\baselineskip}
+\chapter{Enhancements: Redesigned UI and REST API}
+
+\section{User Interface (branch \texttt{ui-redesign})}
+The Thymeleaf templates were restyled with a CSS-variable design system, a remembered light/dark toggle, a responsive layout and no external CDN. New features: a home page with live owner/pet/vet/visit counts, an owner profile with initials avatar, pet cards and visit timeline (including the pet age from US6), and instant client-side filtering of the owner and vet lists.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.31\linewidth]{assets/ui_home.png}\hfill
+\includegraphics[width=0.31\linewidth]{assets/ui_owner_dark.png}\hfill
+\includegraphics[width=0.31\linewidth]{assets/ui_swagger.png}
+\caption{Home (light), owner profile (dark) and Swagger UI from the running app.}
+\end{figure}
+
+\section{REST API and Production Hardening (branch \texttt{api-backend})}
+\begin{itemize}[leftmargin=1.6em,itemsep=1pt]
+  \item \textbf{API v1:} \code{/api/v1/owners}, \code{pets}, \code{visits}, \code{vets}, \code{pet-types}; record DTOs, pagination and sorting, bean validation, RFC~7807 problem+json errors, proper status codes, and OpenAPI 3.1 docs with Swagger UI.
+  \item \textbf{Observability:} actuator health (liveness/readiness), metrics and Prometheus; a correlation-id filter that logs each request.
+  \item \textbf{Protection:} in-memory per-IP rate limit (429 with \code{Retry-After}), security headers including a Content-Security-Policy, and Caffeine caching with ETag on read endpoints.
+  \item \textbf{Delivery:} non-root multi-stage Dockerfile, docker-compose with PostgreSQL, hardened GitHub Actions workflow.
+\end{itemize}
+Verified: \code{mvn test} gives \texttt{Tests run: 110, Failures: 0, Errors: 0, Skipped: 2} (85 original plus 25 new MockMvc tests). Live check: invalid POST gave a 400 problem document; 150 rapid requests gave 56 $\times$ 200, 94 $\times$ 429.
+
+
 \chapter{Conclusion}
 Spring PetClinic shows how a small codebase can still apply the full construction toolkit:
 clear layering, a compact domain model, SOLID-aligned class design, a test suite that maps to the
-user stories (85 tests, all passing locally, including six added for the new pet-age feature) and a CI workflow that rebuilds and re-tests every
-change. The report documents these from the actual source; the Azure Boards, Repos and
-Pipelines screens were not captured because those services were not used for this submission.
+user stories (110 tests, all passing locally: 85 including six for the pet-age feature, plus 25 for the REST API) and a CI workflow that rebuilds and re-tests every
+change. Azure Boards, Repos and Pipelines were not used, so no screens are shown for them.
 
 \end{document}
