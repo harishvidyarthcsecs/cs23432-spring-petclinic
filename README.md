@@ -1,3 +1,21 @@
+# Spring PetClinic - CS23432 Software Construction project
+
+This repository is a coursework fork of the official
+[spring-projects/spring-petclinic](https://github.com/spring-projects/spring-petclinic)
+(Apache License 2.0), prepared by **N. Harish Vidyarth** (Register No. 2116241901035,
+Rajalakshmi Engineering College, B.E. CSE (Cyber Security)) for **CS23432 - Software Construction**.
+
+**Added in this fork**
+- **Pet age (US6):** the owner page shows each pet's age in whole years
+  (`Pet.getAgeInYears`, `ownerDetails.html`, `age`/`years` labels in all ten message bundles).
+- **Tests:** `PetTests` (6 cases). Full suite: 85 run, 0 failures, 2 skipped (Docker-based DB tests).
+- **Project report:** [`docs/report/CS23432_Software_Construction_Report.pdf`](docs/report/CS23432_Software_Construction_Report.pdf)
+  (LaTeX source alongside): user stories, class/MVC/sequence diagrams, SOLID, test traceability, CI/CD.
+
+Everything else is upstream work by the Spring PetClinic authors. The upstream README follows.
+
+---
+
 # Spring PetClinic Sample Application [![Build Status](https://github.com/spring-projects/spring-petclinic/actions/workflows/maven-build.yml/badge.svg)](https://github.com/spring-projects/spring-petclinic/actions/workflows/maven-build.yml)[![Build Status](https://github.com/spring-projects/spring-petclinic/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/spring-projects/spring-petclinic/actions/workflows/gradle-build.yml)
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/spring-projects/spring-petclinic) [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=7517918)
