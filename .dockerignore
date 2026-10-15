@@ -1,0 +1,10 @@
+.git
+.github
+.idea
+.settings
+build
+target
+*.iml
+*.log
+docs/report
+src/test
