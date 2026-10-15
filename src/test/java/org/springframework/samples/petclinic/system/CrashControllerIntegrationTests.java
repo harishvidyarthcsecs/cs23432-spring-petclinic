@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.samples.petclinic.owner.OwnerRepository;
+import org.springframework.samples.petclinic.vet.VetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,6 +34,7 @@ import org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerA
 import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -57,6 +60,12 @@ class CrashControllerIntegrationTests {
 
 	@Autowired
 	private TestRestTemplate rest;
+
+	@MockitoBean
+	private OwnerRepository ownerRepository;
+
+	@MockitoBean
+	private VetRepository vetRepository;
 
 	@Test
 	void triggerExceptionJson() {
@@ -84,7 +93,7 @@ class CrashControllerIntegrationTests {
 		assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
 		assertThat(resp.getBody()).isNotNull();
 		// html:
-		assertThat(resp.getBody()).containsSubsequence("<body>", "<h2>", "Something happened...", "</h2>", "<p>",
+		assertThat(resp.getBody()).containsSubsequence("<body>", "<h1>", "Something happened...", "</h1>", "<p>",
 				"Expected:", "controller", "used", "to", "showcase", "what", "happens", "when", "an", "exception", "is",
 				"thrown", "</p>", "</body>");
 		// Not the whitelabel error page:

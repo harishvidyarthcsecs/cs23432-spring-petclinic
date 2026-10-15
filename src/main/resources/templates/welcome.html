@@ -3,14 +3,40 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
 
 <body>
-
-  <h2 th:text="#{welcome}">Welcome</h2>
-  <div class="row">
-    <div class="col-md-12">
-      <img class="img-responsive" src="../static/resources/images/pets.png" th:src="@{/resources/images/pets.png}" />
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="status-dot" aria-hidden="true"></span><span th:text="#{clinicDashboard}">Clinic dashboard</span></div>
+      <h1 id="hero-title" th:text="#{heroTitle}">Better care starts with a clear view.</h1>
+      <p class="hero-summary" th:text="#{heroSummary}">Keep owners, pets, visits, and your veterinary team connected in one calm workspace.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" th:href="@{/owners/find}"><i class="fa fa-search" aria-hidden="true"></i><span th:text="#{findOwners}">Find owners</span></a>
+        <a class="btn btn-secondary btn-lg" th:href="@{/vets.html}"><i class="fa fa-user-md" aria-hidden="true"></i><span th:text="#{vets}">Veterinarians</span></a>
+        <a class="btn btn-quiet btn-lg" th:href="@{/owners/new}"><i class="fa fa-plus" aria-hidden="true"></i><span th:text="#{addOwner}">Add owner</span></a>
+      </div>
     </div>
-  </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="care-orbit care-orbit-one"></div><div class="care-orbit care-orbit-two"></div>
+      <div class="pet-portrait"><img th:src="@{/resources/images/pets.png}" alt="" /></div>
+      <div class="care-note care-note-top"><i class="fa fa-heartbeat"></i><span th:text="#{careInSync}">Care in sync</span></div>
+      <div class="care-note care-note-bottom"><i class="fa fa-check-circle"></i><span th:text="#{recordsReady}">Records ready</span></div>
+    </div>
+  </section>
 
+  <section class="stats-panel" th:aria-label="#{clinicOverview}">
+    <div class="stat-item"><span class="stat-icon stat-icon-owner" aria-hidden="true"><i class="fa fa-users"></i></span><div><strong th:text="${ownerCount}">0</strong><span th:text="#{owners}">Owners</span></div></div>
+    <div class="stat-item"><span class="stat-icon stat-icon-pet" aria-hidden="true"><i class="fa fa-paw"></i></span><div><strong th:text="${petCount}">0</strong><span th:text="#{pets}">Pets</span></div></div>
+    <div class="stat-item"><span class="stat-icon stat-icon-vet" aria-hidden="true"><i class="fa fa-user-md"></i></span><div><strong th:text="${vetCount}">0</strong><span th:text="#{vets}">Veterinarians</span></div></div>
+    <div class="stat-item"><span class="stat-icon stat-icon-visit" aria-hidden="true"><i class="fa fa-calendar-check-o"></i></span><div><strong th:text="${visitCount}">0</strong><span th:text="#{visits}">Visits</span></div></div>
+  </section>
+
+  <section class="quick-section" aria-labelledby="quick-actions-title">
+    <div class="section-heading"><div><span class="eyebrow" th:text="#{everydayTools}">Everyday tools</span><h2 id="quick-actions-title" th:text="#{quickActions}">What would you like to do?</h2></div></div>
+    <div class="quick-grid">
+      <a class="quick-card" th:href="@{/owners/find}"><span class="quick-icon"><i class="fa fa-address-book-o"></i></span><span><strong th:text="#{findOwners}">Find owners</strong><small th:text="#{findOwnersHint}">Search records and review pet histories</small></span><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+      <a class="quick-card" th:href="@{/owners/new}"><span class="quick-icon"><i class="fa fa-user-plus"></i></span><span><strong th:text="#{addOwner}">Add owner</strong><small th:text="#{addOwnerHint}">Create a new owner and pet profile</small></span><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+      <a class="quick-card" th:href="@{/vets.html}"><span class="quick-icon"><i class="fa fa-stethoscope"></i></span><span><strong th:text="#{vets}">Veterinarians</strong><small th:text="#{vetsHint}">Browse the team and specialties</small></span><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+    </div>
+  </section>
 </body>
 
 </html>

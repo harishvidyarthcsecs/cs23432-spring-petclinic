@@ -3,32 +3,13 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
 
 <body>
-
-  <h2>
-    <th:block th:if="${pet['new']}" th:text="#{new}">New </th:block>
-    <span th:text="#{pet}">Pet</span>
-  </h2>
-  <form th:object="${pet}" class="form-horizontal" method="post">
-    <input type="hidden" name="id" th:value="*{id}" />
-    <div class="form-group has-feedback">
-      <div class="form-group">
-        <label class="col-sm-2 control-label" th:text="#{owner}">Owner</label>
-        <div class="col-sm-10">
-          <span th:text="${owner?.firstName + ' ' + owner?.lastName}" />
-        </div>
-      </div>
-      <input th:replace="~{fragments/inputField :: input ('Name', 'name', 'text')}" />
-      <input th:replace="~{fragments/inputField :: input ('Birth Date', 'birthDate', 'date')}" />
-      <input th:replace="~{fragments/selectField :: select ('Type', 'type', ${types})}" />
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button th:with="text=${pet['new']} ? 'Add Pet' : 'Update Pet'" class="btn btn-primary" type="submit"
-          th:text="${text}">Add Pet</button>
-      </div>
-    </div>
-  </form>
-
+  <nav class="breadcrumbs" th:aria-label="#{breadcrumbs}"><a th:href="@{/owners/__${owner.id}__}" th:text="${owner.firstName + ' ' + owner.lastName}">Owner</a><i class="fa fa-chevron-right" aria-hidden="true"></i><span th:text="${pet['new']} ? #{addNewPet} : #{editPet}">Pet</span></nav>
+  <div class="form-layout">
+    <div class="form-intro"><span class="form-intro-icon form-intro-pet"><i class="fa fa-paw" aria-hidden="true"></i></span><span class="eyebrow" th:text="#{petProfile}">Pet profile</span><h1 th:text="${pet['new']} ? #{addNewPet} : #{editPet}">Pet</h1><p th:text="#{petFormHint}">A few details help the care team keep every visit personal and prepared.</p><div class="context-chip"><span class="avatar avatar-sm" th:text="${(#strings.isEmpty(owner.firstName) ? '?' : #strings.substring(owner.firstName,0,1)) + (#strings.isEmpty(owner.lastName) ? '?' : #strings.substring(owner.lastName,0,1))}">JD</span><span><small th:text="#{owner}">Owner</small><strong th:text="${owner.firstName + ' ' + owner.lastName}">Owner name</strong></span></div></div>
+    <section class="form-card" th:aria-label="#{petInformation}">
+      <form th:object="${pet}" method="post" novalidate><input type="hidden" name="id" th:value="*{id}" /><div class="form-grid"><input th:replace="~{fragments/inputField :: input (#{name}, 'name', 'text')}" /><input th:replace="~{fragments/inputField :: input (#{birthDate}, 'birthDate', 'date')}" /><input th:replace="~{fragments/selectField :: select (#{type}, 'type', ${types})}" /></div><div class="form-actions"><a class="btn btn-quiet" th:href="@{/owners/__${owner.id}__}" th:text="#{cancel}">Cancel</a><button th:with="text=${pet['new']} ? #{addPet} : #{updatePet}" class="btn btn-primary" type="submit"><i class="fa fa-check" aria-hidden="true"></i><span th:text="${text}">Save Pet</span></button></div></form>
+    </section>
+  </div>
 </body>
 
 </html>

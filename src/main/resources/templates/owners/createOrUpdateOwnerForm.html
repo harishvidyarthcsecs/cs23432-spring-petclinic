@@ -3,23 +3,16 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
 
 <body>
-
-  <h2 th:text="#{owner}">Owner</h2>
-  <form th:object="${owner}" class="form-horizontal" id="add-owner-form" method="post">
-    <div class="form-group has-feedback">
-      <input th:replace="~{fragments/inputField :: input (#{firstName}, 'firstName', 'text')}" />
-      <input th:replace="~{fragments/inputField :: input (#{lastName}, 'lastName', 'text')}" />
-      <input th:replace="~{fragments/inputField :: input (#{address}, 'address', 'text')}" />
-      <input th:replace="~{fragments/inputField :: input (#{city}, 'city', 'text')}" />
-      <input th:replace="~{fragments/inputField :: input (#{telephone}, 'telephone', 'text')}" />
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button th:with="text=${owner['new']} ? #{addOwner} : #{updateOwner}" class="btn btn-primary" type="submit"
-          th:text="${text}">Add Owner</button>
-      </div>
-    </div>
-  </form>
+  <nav class="breadcrumbs" th:aria-label="#{breadcrumbs}"><a th:href="@{/owners/find}" th:text="#{owners}">Owners</a><i class="fa fa-chevron-right" aria-hidden="true"></i><span th:text="${owner['new']} ? #{addOwner} : #{editOwner}">Owner</span></nav>
+  <div class="form-layout">
+    <div class="form-intro"><span class="form-intro-icon"><i class="fa fa-user-o" aria-hidden="true"></i></span><span class="eyebrow" th:text="#{ownerProfile}">Owner profile</span><h1 th:text="${owner['new']} ? #{addOwner} : #{editOwner}">Owner</h1><p th:text="#{ownerFormHint}">Keep contact details current so care updates always reach the right person.</p></div>
+    <section class="form-card" th:aria-label="#{ownerInformation}">
+      <form th:object="${owner}" id="add-owner-form" method="post" novalidate>
+        <div class="form-grid"><input th:replace="~{fragments/inputField :: input (#{firstName}, 'firstName', 'text')}" /><input th:replace="~{fragments/inputField :: input (#{lastName}, 'lastName', 'text')}" /><input th:replace="~{fragments/inputField :: input (#{address}, 'address', 'text')}" /><input th:replace="~{fragments/inputField :: input (#{city}, 'city', 'text')}" /><input th:replace="~{fragments/inputField :: input (#{telephone}, 'telephone', 'tel')}" /></div>
+        <div class="form-actions"><a class="btn btn-quiet" th:href="${owner['new']} ? @{/owners/find} : @{/owners/__${owner.id}__}" th:text="#{cancel}">Cancel</a><button th:with="text=${owner['new']} ? #{addOwner} : #{updateOwner}" class="btn btn-primary" type="submit"><i class="fa fa-check" aria-hidden="true"></i><span th:text="${text}">Save owner</span></button></div>
+      </form>
+    </section>
+  </div>
 </body>
 
 </html>

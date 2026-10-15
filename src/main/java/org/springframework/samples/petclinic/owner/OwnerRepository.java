@@ -20,6 +20,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * Repository class for <code>Owner</code> domain objects. All method names are compliant
@@ -58,5 +59,11 @@ public interface OwnerRepository extends JpaRepository<Owner, Integer> {
 	 * input for id)
 	 */
 	Optional<Owner> findById(Integer id);
+
+	@Query("select count(p) from Pet p")
+	long countPets();
+
+	@Query("select count(v) from Visit v")
+	long countVisits();
 
 }
